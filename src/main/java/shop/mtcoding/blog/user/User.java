@@ -20,7 +20,4 @@ public class User {
     @Column(length = 60, nullable = false)
     private String password;
     private String email;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 }
