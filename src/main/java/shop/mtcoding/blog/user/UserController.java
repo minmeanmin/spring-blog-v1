@@ -2,6 +2,7 @@ package shop.mtcoding.blog.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -55,8 +56,14 @@ public class UserController {
             return "error/400";
         }
 
-        //2. Model에게 위임하기
-        userRepository.save(requestDTO);
+        //2. 동일 username 체크(나중에 하나의 트랜젝션
+        User user = userRepository.findByUsername(requestDTO.getUsername());
+        if(user == null){
+            //3. Model에게 위임하기
+            userRepository.save(requestDTO);
+        }else{
+            return "error/400";
+        }
 
         return "redirect:/loginForm";
     }
