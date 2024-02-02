@@ -1,11 +1,11 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.math.BigInteger;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,8 +27,18 @@ public class BoardRepository {
     public int count(){
         Query query = em.createNativeQuery("select count(*) from board_tb");
 
-        BigInteger count = (BigInteger) query.getSingleResult();
+        Long count = (Long) query.getSingleResult();
 
         return count.intValue();
+    }
+
+    public BoardResponse.DetailDTO findById(int id) {
+        //Entity가 아닌 것은 JPA가 파싱을 안 해준다.
+        Query query = em.createNativeQuery("select bt.id, bt.title, bt.content, bt.created_at, bt.user_id, ut.username from board_tb bt inner join user_tb ut on bt.user_id = ut.id where bt.id = ?");
+        query.setParameter(1, id);
+
+        JpaResultMapper rm = new JpaResultMapper();
+        BoardResponse.DetailDTO responseDTO = rm.uniqueResult(query, BoardResponse.DetailDTO.class);
+        return responseDTO;
     }
 }

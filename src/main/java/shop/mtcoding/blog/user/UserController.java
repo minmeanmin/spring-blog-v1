@@ -1,12 +1,12 @@
 package shop.mtcoding.blog.user;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpSession;
+
 
 
 /**
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private final UserRepository userRepository;
+    //IoC 컨테이너에 세션에 접근할 수 있는 변수가 들어가 있음. DI하면 된다.
     private final HttpSession session;
 
     @PostMapping("/login")
